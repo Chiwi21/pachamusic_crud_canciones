@@ -1,0 +1,8 @@
+{
+  "name_server": "(localdb)\\Alfredo",
+  "database": "PachaMusicDB",
+  "username": "pm_app_login",
+  "password": "PachaMusic#2026",
+  "controlador_odbc": "ODBC Driver 18 for SQL Server",
+  "trust_server_certificate": "yes"
+}
