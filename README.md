@@ -97,6 +97,7 @@ http://127.0.0.1:8000/
 ## Notas de migración
 
 - Django utiliza SQLite únicamente para sesiones y funcionalidades internas del framework.
+- Tener la Base de datos Pacha Music levantada con los scripts de la fase 3
 - La base de datos `PachaMusicDB` no se administra mediante modelos Django.
 - La lógica de acceso a datos continúa utilizando procedimientos almacenados y `pyodbc`.
 - Las plantillas Jinja originales fueron conservadas mediante el backend Jinja2 de Django.
