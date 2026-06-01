@@ -66,6 +66,14 @@ Ejemplo:
 }
 ```
 
+Luego ejecuta los scripts en este orden:
+
+```text
+1. loginsql
+2. sp_crud_canciones
+3. sp_adicionales
+
+```
 ## Ejecutar el proyecto
 
 Aplicar las migraciones internas de Django:
