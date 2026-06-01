@@ -1,64 +1,121 @@
-# CRUD OOP de Canciones - PachaMusicDB
+# PachaMusicDB - Versión Django
 
-Proyecto para Base de Datos II. El sistema implementa un CRUD orientado a objetos en Python para la tabla `dbo.Cancion` de la base `PachaMusicDB`, usando conexión con `config.json` y procedimientos almacenados en SQL Server.
+Migración del proyecto original en Flask a Django. La interfaz conserva las mismas páginas, rutas principales y llamadas a procedimientos almacenados de SQL Server mediante `pyodbc`.
 
-## Archivos
+## Estructura principal
 
-- `gestor_canciones.py`: programa principal en Python con la clase `GestorCanciones`.
-- `config.json`: archivo de configuración de conexión.
-- `sp_crud_cancion.sql`: procedimientos almacenados para crear, consultar, actualizar y eliminar canciones.
+```text
+pachamusic_django/
+├── manage.py
+├── config.json
+├── requirements.txt
+├── sp_crud_cancion.sql
+├── sp_adicionales.sql
+├── pachamusic_project/
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+└── core/
+    ├── db.py
+    ├── views.py
+    ├── urls.py
+    ├── jinja2.py
+    ├── context_processors.py
+    └── templates/
+```
 
 ## Requisitos
 
 - Python 3.x
-- SQL Server
-- ODBC Driver 17 for SQL Server
-- Librería `pyodbc`
+- SQL Server con la base de datos `PachaMusicDB`
+- ODBC Driver 17 o 18 para SQL Server
+- Procedimientos almacenados instalados en la base de datos
+- PowerShell o Terminal de Windows
 
-Instalación de pyodbc:
+## Instalación
 
-```bash
-pip install pyodbc
+### 1. Abrir PowerShell en la carpeta del proyecto
+
+Todos los comandos deben ejecutarse desde la carpeta raíz del proyecto.
+
+Puedes hacerlo de cualquiera de estas formas:
+
+- Clic derecho dentro de la carpeta → **Abrir en Terminal**
+- Escribir `powershell` en la barra de direcciones del Explorador de Windows y presionar Enter
+
+### 2. Instalar dependencias
+
+```powershell
+pip install -r requirements.txt
 ```
 
-## Configuración
+### 3. Configurar la conexión a la base de datos
 
-Editar `config.json` con los datos del servidor local:
+Edita el archivo `config.json` con los datos de tu instancia de SQL Server.
+
+Ejemplo:
 
 ```json
 {
-  "name_server": "LAPTOP-SJ66TR29",
+  "name_server": "(localdb)\\Alfredo",
   "database": "PachaMusicDB",
   "username": "pm_app_login",
   "password": "PachaMusic#2026",
-  "controlador_odbc": "ODBC Driver 17 for SQL Server",
+  "controlador_odbc": "ODBC Driver 18 for SQL Server",
   "trust_server_certificate": "yes"
 }
 ```
 
-## Ejecución en SQL Server
+## Ejecutar el proyecto
 
-Ejecutar primero:
+Aplicar las migraciones internas de Django:
 
-```sql
-sp_crud_cancion.sql
+```powershell
+python manage.py migrate
 ```
 
-Este script crea los procedimientos:
+Iniciar el servidor:
 
-- `dbo.sp_CRUD_CrearCancion`
-- `dbo.sp_CRUD_ConsultarCanciones`
-- `dbo.sp_CRUD_ActualizarCancion`
-- `dbo.sp_CRUD_EliminarCancion`
-
-## Ejecución en Python
-
-Desde la carpeta del proyecto:
-
-```bash
-python gestor_canciones.py
+```powershell
+python manage.py runserver
 ```
 
-## Nota sobre eliminación
+Luego abre en tu navegador:
 
-La eliminación se implementa de forma segura. Si una canción tiene relaciones con reproducciones, likes, playlists, géneros, ventas o descargas, el procedimiento no la borra físicamente; la marca como `Inactiva`. Si no tiene dependencias, se elimina de la tabla.
+```text
+http://127.0.0.1:8000/
+```
+
+## Notas de migración
+
+- Django utiliza SQLite únicamente para sesiones y funcionalidades internas del framework.
+- La base de datos `PachaMusicDB` no se administra mediante modelos Django.
+- La lógica de acceso a datos continúa utilizando procedimientos almacenados y `pyodbc`.
+- Las plantillas Jinja originales fueron conservadas mediante el backend Jinja2 de Django.
+- Se implementaron funciones de compatibilidad para mantener el comportamiento del proyecto original en Flask.
+
+## Solución de problemas
+
+### Error de conexión a SQL Server
+
+Verifica que:
+
+- SQL Server esté en ejecución.
+- Los datos de `config.json` sean correctos.
+- El controlador ODBC especificado esté instalado.
+
+### Error: "No module named pyodbc"
+
+Ejecuta nuevamente:
+
+```powershell
+pip install -r requirements.txt
+```
+
+### Puerto 8000 ocupado
+
+Puedes iniciar el servidor en otro puerto:
+
+```powershell
+python manage.py runserver 8080
+```
